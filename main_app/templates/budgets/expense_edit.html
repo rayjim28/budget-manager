@@ -1,0 +1,26 @@
+{% extends "budgets/base.html" %}
+
+{% block content %}
+  <h2>Edit Expense</h2>
+  <form method="POST" action="{% url 'expense_edit' expense.id %}">
+    {% csrf_token %}
+    <label for="item_name">Item Name:</label>
+    <input type="text" name="item_name" value="{{ expense.item_name }}"><br>
+
+    <label for="item_cost">Item Cost:</label>
+    <input type="number" name="item_cost" value="{{ expense.item_cost }}"><br>
+
+    <label for="item_category">Item Category:</label>
+    <select name="item_category">
+      <option value="HO" {% if expense.item_category == 'HO' %}selected{% endif %}>Housing 🏠</option>
+      <option value="ME" {% if expense.item_category == 'ME' %}selected{% endif %}>Medical 🏥</option>
+      <option value="GR" {% if expense.item_category == 'GR' %}selected{% endif %}>Groceries 🛒</option>
+      <option value="CA" {% if expense.item_category == 'CA' %}selected{% endif %}>Car 🚙</option>
+    </select><br>
+
+    <label for="purchase_date">Purchase Date:</label>
+    <input type="date" name="purchase_date" value="{{ expense.purchase_date }}"><br>
+
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

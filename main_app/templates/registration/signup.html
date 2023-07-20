@@ -1,0 +1,28 @@
+{% extends 'budgets/base.html' %}
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title">Sign Up</h1>
+
+          {% if error_message %}
+          <div class="alert alert-danger">
+            {{ error_message }}
+          </div>
+          {% endif %}
+
+          <form class="signup-form" action="{% url 'signup' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
