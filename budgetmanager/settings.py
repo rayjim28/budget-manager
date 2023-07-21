@@ -145,7 +145,7 @@ if not DEBUG:
     # and creating unique names for each version so they can safely be cached forever.
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-LOGIN_REDIRECT_URL = "/personal_budget/"
+LOGIN_REDIRECT_URL = "/budgets/"
 
 LOGOUT_REDIRECT_URL = "/accounts/login/"
 

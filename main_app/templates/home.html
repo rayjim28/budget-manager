@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+  /* Create a gradient background for the jumbotron */
+  .jumbotron-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+  }
+  
+  /* Hover effect for the cards */
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="jumbotron p-4 p-md-5 text-white rounded jumbotron-bg animate__animated animate__fadeIn">
+    <div class="col-md-6 px-0">
+      <h1 class="display-4 font-italic">Welcome to Budget Manager</h1>
+      <p class="lead my-3">Manage your financial journey with ease and clarity.</p>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <div class="card mb-4 shadow-sm animate__animated animate__slideInUp" style="animation-delay: 0.2s;">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-wallet fa-lg mr-2"></i> Budget Overview
+          </h5>
+          <p class="card-text">Review your entire budget at a glance and monitor your financial health.</p>
+          <a href="#" class="btn btn-outline-primary">Explore</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4 shadow-sm animate__animated animate__slideInUp" style="animation-delay: 0.4s;">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-chart-line fa-lg mr-2"></i> Analytics
+          </h5>
+          <p class="card-text">Dive into detailed analytics to gain insights into your spending patterns.</p>
+          <a href="#" class="btn btn-outline-primary">View Charts</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional: Add floating icons or parallax images for a modern touch -->
+  <div class="floating-icons">
+    <!-- Use appropriate images/icons and styles here -->
+  </div>
+</div>
+
+{% endblock %}

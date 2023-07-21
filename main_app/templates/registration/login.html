@@ -1,15 +1,43 @@
-{% extends 'budgets/base.html' %} {% load bootstrap4 %} {% block content %}
+{% extends 'base.html' %}
+{% load bootstrap4 %}
 
-<div class="container">
-  <div class="row justify-content-center">
+{% block content %}
+
+<style>
+  /* Gradient background */
+  .gradient-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+  }
+
+  /* Style for form fields */
+  .login-form input[type="text"], 
+  .login-form input[type="password"], 
+  .login-form input[type="email"] {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 3px 3px 15px rgba(0,0,0,0.1);
+  }
+
+  /* Hover effect for button */
+  .btn-hover-effect:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="row justify-content-center animate__animated animate__fadeInUp">
     <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
+      <div class="card border-0 shadow-lg">
+        <div class="card-body gradient-bg text-white">
           <h1 class="card-title">Log In</h1>
-          <form class="login-form" action="{% url 'login' %}" method="POST">
-            {% csrf_token %} {% bootstrap_form form %}
+
+          <form class="login-form mt-3" action="{% url 'login' %}" method="POST">
+            {% csrf_token %} 
+            {% bootstrap_form form %}
             <input type="hidden" name="next" value="{{ next }}" />
-            <button type="submit" class="btn btn-primary">Log In</button>
+            <button type="submit" class="btn btn-light btn-hover-effect">Log In</button>
           </form>
         </div>
       </div>

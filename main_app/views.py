@@ -5,16 +5,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib import messages  # for success and error messages
 from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from django.db.models import Sum
 
 
 # Create your views here.
 # View for home page
 def home(request):
-    return render(request, "budgets/home.html")
+    print("Rendering home.html")
+    return render(request, "home.html")
 
 
 def about(request):
-    return render(request, "budgets/about.html")
+    print("Rendering about.html")
+    return render(request, "about.html")
 
 
 def signup(request):
@@ -26,7 +31,8 @@ def signup(request):
             user = form.save()
             # Automatically log in the new user
             login(request, user)
-            return redirect("personal_budget")
+            print(f"User {user.username} successfully signed up and logged in")
+            return redirect("index")
         else:
             error_message = "Invalid sign up - try again"
 
@@ -36,70 +42,135 @@ def signup(request):
     return render(request, "registration/signup.html", context)
 
 
-def income_list(request):
-    incomes = Income.objects.filter(owner=request.user)
-    print(f"Found {incomes.count()} incomes for {request.user}")  # Print incomes
-    return render(request, "budgets/income_list.html", {"incomes": incomes})
+# View for the personal budget
+@login_required
+def index(request):
+    user_budgets = PersonalBudget.objects.filter(owner=request.user)
+    if user_budgets.exists():
+        print(
+            f"Found {user_budgets.count()} budgets for {request.user}"
+        )  # Print budgets
+
+        for budget in user_budgets:
+            # Calculate total income for each budget
+            budget.total_income = (
+                budget.income_set.aggregate(Sum("amount"))["amount__sum"] or 0
+            )
+
+            # Calculate total remaining for each budget
+            budget.total_remaining = budget.budget_amount - budget.total_income
+        return render(
+            request,
+            "budgets/index.html",
+            {"user_budgets": user_budgets, "budget": None},
+        )
+    else:
+        print(f"No budgets found for {request.user}")  # Print when no budgets found
+        return redirect("create")
 
 
-def create_budget(request):
+# budget
+@login_required
+def create(request):
     if request.method == "POST":
         budget_name = request.POST.get("name")
-        budget_amount = request.POST.get(
-            "amount"
-        )  # Update the variable name to 'budget_amount'
+        budget_amount = request.POST.get("amount")
 
+        # Create the budget
         budget = PersonalBudget(
             owner=request.user, budget_name=budget_name, budget_amount=budget_amount
         )
         budget.save()
-        print(
-            f"Created budget with name '{budget_name}' for {request.user}"
-        )  # Print budget creation
-        messages.success(request, "Your personal budget has been created!")
-        return redirect("personal_budget")
+        print(f"Created budget with name '{budget_name}' for {request.user}")
 
-    return render(request, "budgets/create_budget.html")
-
-
-# View for the personal budget
-def personal_budget(request):
-    try:
-        user_budgets = PersonalBudget.objects.filter(owner=request.user)
-        print(
-            f"Found {user_budgets.count()} budgets for {request.user}"
-        )  # Print budgets
-        return render(
-            request, "budgets/personal_budget.html", {"user_budgets": user_budgets}
+        # Treat the initial amount as an initial income and link it to the budget
+        income_name = "Initial Income"
+        initial_income = Income(
+            name=income_name, amount=budget_amount, owner=request.user, budget=budget
         )
+        initial_income.save()
+
+        messages.success(request, "Your personal budget has been created!")
+        return redirect("index")
+
+    return render(request, "budgets/create.html")
+
+
+@login_required
+def detail(request, budget_id):
+    try:
+        budget = PersonalBudget.objects.get(owner=request.user, id=budget_id)
+
+        total_income = budget.total_income_amount
+        total_expense = budget.total_expenses
+        total_remaining = budget.budget_amount - total_expense
+        creation_date = request.POST.get("creation_date")
+
+        context = {
+            "title": "Budget Detail",
+            "budget": budget,
+            "total_income": total_income,
+            "total_remaining": total_remaining,
+            "creation_date": creation_date,
+        }
+
+        print(f"Showing details for budget_id: {budget_id}")  # Print budget details
+        return render(request, "budgets/detail.html", context)
     except PersonalBudget.DoesNotExist:
-        print(f"No budgets found for {request.user}")  # Print when no budgets found
-        return redirect("create_budget")
+        # Handle the case where the budget does not exist
+        messages.error(request, "Budget not found.")
+        return redirect("index")
 
 
-def budget_detail(request, budget_id):
-    budgets = PersonalBudget.objects.all()
-    print(f"Showing details for budget_id: {budget_id}")  # Print budget details
-    context = {"title": "Budget Detail", "budgets": budgets}
-    return render(request, "budgets/budget_detail.html", context)
+@login_required
+def edit(request, budget_id):
+    budget = get_object_or_404(PersonalBudget, id=budget_id)
+
+    # Ensure the user is authorized to edit this budget
+    if request.user != budget.owner:
+        messages.error(request, "You are not authorized to edit this budget.")
+        return redirect("index")  # Redirect to the budget list page
+
+    if request.method == "POST":
+        budget_name = request.POST.get("name")
+        budget_amount = request.POST.get("amount")
+
+        if budget_name and budget_amount:
+            budget.budget_name = budget_name
+            budget.budget_amount = budget_amount
+            budget.save()
+
+            messages.success(request, "Budget updated successfully!")
+            return redirect(
+                "detail", budget_id=budget.id
+            )  # Redirect to the budget detail page
+        else:
+            messages.error(
+                request,
+                "Failed to update the budget. Please check the provided values.",
+            )
+
+    context = {"budget": budget}
+    return render(request, "budgets/edit.html", context)
 
 
-def delete_budget(request, budget_id):
+@login_required
+def delete(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
     if request.user == budget.owner:
-        print(
-            f"Deleted budget with id {budget_id} for {request.user}"
-        )  # Print when a budget is deleted
+        print(f"User {request.user} is authorized to delete budget with id {budget_id}")
         budget.delete()
-        return (
-            HttpResponseBadRequest()
-        )  # Return a response indicating successful deletion
+        messages.success(request, "Budget deleted successfully.")
+        return redirect("index")
     else:
-        return HttpResponseBadRequest(
-            "You are not authorized to delete this budget."
-        )  # Return an error response if the user is not authorized
+        print(
+            f"User {request.user} is not authorized to delete budget with id {budget_id}"
+        )
+        messages.error(request, "You are not authorized to delete this budget.")
+        return redirect("index")
 
 
+@login_required
 def create_expense(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
 
@@ -108,6 +179,8 @@ def create_expense(request, budget_id):
         item_cost = request.POST.get("item_cost")
         item_category = request.POST.get("item_category")
         purchase_date = request.POST.get("purchase_date")
+
+        print(f"Received new expense creation request for budget with id {budget_id}")
 
         expense = ExpenseItem(
             item_name=item_name,
@@ -118,51 +191,183 @@ def create_expense(request, budget_id):
         )
         expense.save()
 
+        # No need to add the expense to the budget, it's already associated.
         budget.related_expenses.add(expense)
+
+        print(f"Expense with name '{item_name}' added to budget with id {budget_id}")
 
         return redirect("expense_list", budget_id=budget_id)
 
-    return render(request, "budgets/create_expense.html", {"budget": budget})
+    return render(request, "budgets/expenses/create_expense.html", {"budget": budget})
 
 
 # View for the list of expense items
+@login_required
 def expense_list(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
     expenses = budget.related_expenses.all()
     print(f"Found {expenses.count()} expenses for {request.user}")  # Print expenses
 
+    income_count = budget.related_incomes.count()
+    total_income = budget.related_incomes.aggregate(sum=Sum("amount"))["sum"] or 0
+    total_expenses = expenses.aggregate(sum=Sum("item_cost"))["sum"] or 0
+    remaining_total = total_income - total_expenses
+
     if request.method == "POST":
         expense_id = request.POST.get("expense_id")
         expense = get_object_or_404(ExpenseItem, id=expense_id)
         if expense.owner == request.user:
+            print(
+                f"User {request.user} is authorized to delete expense with id {expense_id}"
+            )
             expense.delete()
-            return (
-                HttpResponseBadRequest()
-            )  # Return a response indicating successful deletion
+            # Redirect to the expense list after deletion
+            return redirect("expense_list", budget_id=budget_id)
         else:
+            print(
+                f"User {request.user} is not authorized to delete expense with id {expense_id}"
+            )
             return HttpResponseBadRequest(
                 "You are not authorized to delete this expense."
             )  # Return an error response if the user is not authorized
 
     return render(
-        request, "budgets/expense_list.html", {"budget": budget, "expenses": expenses}
+        request,
+        "budgets/expenses/expense_list.html",
+        {
+            "budget": budget,
+            "expenses": expenses,
+            "income_count": income_count,
+            "total_income": total_income,
+            "remaining_total": remaining_total,
+        },
     )
 
 
-def expense_detail(request, expense_id):
+@login_required
+def expense_detail(request, budget_id, expense_id):
     expense = get_object_or_404(ExpenseItem, id=expense_id)
-    return render(request, 'budgets/expense_detail.html', {'expense': expense})
+    budget = get_object_or_404(PersonalBudget, id=budget_id)
+    print(
+        f"Showing details for expense with id {expense_id} of budget with id {budget_id}"
+    )
+    return render(
+        request,
+        "budgets/expenses/expense_detail.html",
+        {"expense": expense, "budget": budget},
+    )
 
 
-def expense_edit(request, expense_id):
+@login_required
+def expense_edit(request, budget_id, expense_id):
     expense = get_object_or_404(ExpenseItem, id=expense_id)
+    budget = get_object_or_404(PersonalBudget, id=budget_id)  # Fetch the budget object
+    error_messages = []
 
     if request.method == "POST":
         expense.item_name = request.POST.get("item_name")
         expense.item_cost = request.POST.get("item_cost")
         expense.item_category = request.POST.get("item_category")
-        expense.purchase_date = request.POST.get("purchase_date")
-        expense.save()
-        return redirect("expense_list")
 
-    return render(request, "budgets/expense_edit.html", {"expense": expense})
+        # Get the date value from the form data with a default value of None
+        purchase_date_str = request.POST.get("purchase_date", None)
+
+        if purchase_date_str and purchase_date_str.strip():
+            try:
+                # Parse the date string to a datetime object
+                purchase_date = datetime.strptime(purchase_date_str, "%Y-%m-%d")
+                expense.purchase_date = purchase_date
+            except ValueError:
+                # Add an error message if the date format is invalid
+                error_messages.append(
+                    "The date format is invalid. Please enter a valid date in YYYY-MM-DD format."
+                )
+        else:
+            # Add an error message if the date field is empty or not provided
+            error_messages.append("The date field cannot be empty.")
+
+        if error_messages:
+            # Loop through and add all error messages
+            for error in error_messages:
+                messages.error(request, error)
+            return render(
+                request,
+                "budgets/expenses/expense_edit.html",
+                {"expense": expense, "budget": budget},
+            )
+
+        expense.save()
+        print(f"Updated expense with id {expense_id} for budget with id {budget_id}")
+        return redirect("expense_list", budget_id=budget_id)
+
+    return render(
+        request,
+        "budgets/expenses/expense_edit.html",
+        {"expense": expense, "budget": budget},
+    )
+
+
+def expense_delete(request, budget_id, expense_id):
+    expense = get_object_or_404(ExpenseItem, id=expense_id)
+    if request.user == expense.owner:
+        print(f"Deleted expense with id {expense_id} for {request.user}")
+        expense.delete()
+
+        # Redirect back to the list of expenses after successful deletion
+        return redirect("expense_list", budget_id=budget_id)
+    else:
+        # Return an error response if the user is not authorized
+        print(
+            f"User {request.user} is not authorized to delete expense with id {expense_id}"
+        )
+        return HttpResponseBadRequest("You are not authorized to delete this expense.")
+
+
+def income_list(request, budget_id):
+    budget = get_object_or_404(PersonalBudget, id=budget_id)
+    incomes = Income.objects.filter(budget=budget)
+    print(f"Found {incomes.count()} incomes for {request.user}")  # Print incomes
+
+    income_count = incomes.count()
+    total_income = incomes.aggregate(Sum("amount"))["amount__sum"] or 0
+
+    return render(
+        request,
+        "budgets/incomes/income_list.html",
+        {
+            "incomes": incomes,
+            "budget": budget,
+            "total_income": total_income,
+            "income_count": income_count,
+        },
+    )
+
+
+@login_required
+def create_income(request, budget_id):
+    budget = get_object_or_404(PersonalBudget, id=budget_id)
+
+    if request.method == "POST":
+        income_name = request.POST.get("name")
+        income_amount = request.POST.get("amount")
+
+        if income_name and income_amount:
+            income = Income(
+                name=income_name,
+                amount=income_amount,
+                owner=request.user,
+                budget=budget,
+            )
+            income.save()
+
+            print(
+                f"Added income '{income_name}' with amount {income_amount} for budget with id {budget_id}"
+            )
+            messages.success(request, "Income added successfully!")
+            return redirect("income_list", budget_id=budget_id)
+        else:
+            messages.error(
+                request, "Failed to add the income. Please check the provided values."
+            )
+
+    return render(request, "budgets/incomes/create_income.html", {"budget": budget})

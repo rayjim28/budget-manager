@@ -1,23 +1,70 @@
-{% extends 'budgets/base.html' %}
+{% extends 'base.html' %}
+
 {% block content %}
 
-<div class="container">
-  <div class="row justify-content-center">
+<style>
+  /* Gradient background */
+  .gradient-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+  }
+
+  /* Style for form fields */
+  .signup-form input[type="text"], 
+  .signup-form input[type="password"], 
+  .signup-form input[type="email"] {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 3px 3px 15px rgba(0,0,0,0.1);
+  }
+
+  /* Hover effect for button */
+  .btn-hover-effect:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+  }
+
+  /* Animation for error message */
+  .animate-error {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="row justify-content-center animate__animated animate__fadeInUp">
     <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
+      <div class="card border-0 shadow-lg">
+        <div class="card-body gradient-bg text-white">
           <h1 class="card-title">Sign Up</h1>
 
           {% if error_message %}
-          <div class="alert alert-danger">
+          <div class="alert alert-danger animate-error">
             {{ error_message }}
           </div>
           {% endif %}
 
-          <form class="signup-form" action="{% url 'signup' %}" method="POST">
+          <form class="signup-form mt-3" action="{% url 'signup' %}" method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <button type="submit" class="btn btn-light btn-hover-effect">Sign Up</button>
           </form>
         </div>
       </div>

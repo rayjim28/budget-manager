@@ -1,0 +1,91 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <div class="text-center mb-5">
+    <h1 class="display-4 mb-4 animate__animated animate__zoomIn">Budgets</h1>
+    <!-- "Add New Budget" Button -->
+    <a
+      href="{% url 'create' %}"
+      class="btn btn-success btn-lg animate__animated animate__pulse animate__infinite animate__slower"
+      >+ Add New Budget</a
+    >
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for budget in user_budgets %}
+    <div class="col">
+      <div class="card shadow-lg h-100 animate__animated animate__fadeInUp">
+        <div class="card-header bg-dark text-light">
+          <h5 class="card-title m-0">
+            <a
+              href="{% url 'expense_list' budget.id %}"
+              class="text-decoration-none text-light"
+              >{{ budget.budget_name }}</a
+            >
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- <h6 class="card-subtitle mb-3 text-uppercase text-info">
+            Budget Details
+          </h6> -->
+          <p class="card-text">
+            <strong>Income Amount:</strong> ${{ budget.budget_amount }}
+          </p>
+          <!-- <p class="card-text">
+            <strong>Number of Expenses:</strong> {{ budget.total_expense_count
+            }}
+          </p>
+          <p class="card-text">
+            <strong>Number of Incomes:</strong> {{ budget.total_income_count }}
+          </p>
+          <p class="card-text">
+            <strong>Total Income:</strong> ${{ total_income }}
+          </p> -->
+          <p class="card-text">
+            <strong>Total Remaining:</strong> ${{ budget.get_total_remaining }}
+          </p>
+          <a href="{% url 'detail' budget.id %}" class="btn btn-primary btn-sm"
+            >Details</a
+          >
+          <form
+            action="{% url 'delete' budget.id %}"
+            method="post"
+            class="d-inline-block"
+          >
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col">
+      <div class="alert alert-info animate__animated animate__fadeIn">
+        No budgets found.
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  // Bootstrap validation script
+  (function () {
+    "use strict";
+    var forms = document.querySelectorAll(".needs-validation");
+
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>
+{% endblock %}
