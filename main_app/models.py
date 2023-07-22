@@ -16,10 +16,6 @@ class PersonalBudget(models.Model):
     def total_expense_count(self):
         return self.related_expenses.count()
 
-    # @property
-    # def total_expenses(self):
-    #     return self.related_expenses.aggregate(sum=models.Sum("item_cost"))["sum"]
-
     @property
     def total_income_count(self):
         return self.related_incomes.count()
@@ -31,6 +27,11 @@ class PersonalBudget(models.Model):
     @property
     def total_expenses(self):
         return self.related_expenses.aggregate(sum=models.Sum("item_cost"))["sum"] or 0
+    
+    @property
+    def remaining_total(self):
+        return self.total_income_amount - self.total_expenses
+
 
     def get_total_remaining(self):
         total_expenses = self.related_expenses.aggregate(sum=Sum("item_cost"))["sum"] or 0

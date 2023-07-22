@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-5 animate__animated animate__fadeIn">
   <div class="row">
     <div class="col-md-6 mx-auto">
@@ -13,8 +13,7 @@
             <strong>Total Income Amount:</strong> ${{ budget.budget_amount }}
           </p>
           <p class="mb-3">
-            <strong>Total Number of Expenses:</strong> {{
-            budget.total_expense_count }}
+            <strong>Total Number of Expenses:</strong> {{ expense_count }}
           </p>
           <p class="mb-3">
             <strong>Creation Date:</strong> {{ budget.creation_date }}

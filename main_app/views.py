@@ -100,10 +100,11 @@ def create(request):
 def detail(request, budget_id):
     try:
         budget = PersonalBudget.objects.get(owner=request.user, id=budget_id)
+        incomes = Income.objects.filter(budget=budget)
 
-        total_income = budget.total_income_amount
-        total_expense = budget.total_expenses
-        total_remaining = budget.budget_amount - total_expense
+        total_income = incomes.count()
+        # total_expense = budget.total_expenses
+        total_remaining = incomes.aggregate(Sum("amount"))["amount__sum"] or 0
         creation_date = request.POST.get("creation_date")
 
         context = {
@@ -112,6 +113,7 @@ def detail(request, budget_id):
             "total_income": total_income,
             "total_remaining": total_remaining,
             "creation_date": creation_date,
+            "expense_count": budget.total_expense_count,
         }
 
         print(f"Showing details for budget_id: {budget_id}")  # Print budget details
@@ -206,12 +208,14 @@ def create_expense(request, budget_id):
 def expense_list(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
     expenses = budget.related_expenses.all()
+    incomes = Income.objects.filter(budget=budget)
     print(f"Found {expenses.count()} expenses for {request.user}")  # Print expenses
 
-    income_count = budget.related_incomes.count()
+    income_count = incomes.count()
     total_income = budget.related_incomes.aggregate(sum=Sum("amount"))["sum"] or 0
-    total_expenses = expenses.aggregate(sum=Sum("item_cost"))["sum"] or 0
-    remaining_total = total_income - total_expenses
+    total_expenses = budget.total_expenses  # Using the property from the model
+
+    remaining_total = total_income - total_expenses 
 
     if request.method == "POST":
         expense_id = request.POST.get("expense_id")
@@ -230,6 +234,9 @@ def expense_list(request, budget_id):
             return HttpResponseBadRequest(
                 "You are not authorized to delete this expense."
             )  # Return an error response if the user is not authorized
+    print(f"Total Income: {total_income}")
+    print(f"Total Expenses: {total_expenses}")
+    print(f"Remaining Total: {remaining_total}")
 
     return render(
         request,
