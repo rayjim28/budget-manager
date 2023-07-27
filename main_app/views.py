@@ -43,14 +43,20 @@ def signup(request):
 
 
 # View for the personal budget
-
-
 @login_required
 def index(request):
     user_budgets = PersonalBudget.objects.filter(owner=request.user)
+    incomes = Income.objects.filter(budget__in=user_budgets)
 
     budget_data = [
-        {"budget": budget, "remaining_total": budget.remaining_total}
+        {
+            "budget": budget,
+            "remaining_total": budget.remaining_total,
+            "total_income": Income.objects.filter(budget=budget).aggregate(
+                Sum("amount")
+            )["amount__sum"]
+            or 0,
+        }
         for budget in user_budgets
     ]
 
@@ -60,7 +66,7 @@ def index(request):
             "budgets/index.html",
             {
                 "budget_data": budget_data,
-                "number_of_incomes": user_budgets.first().total_income_count,  # This may not be the best way if each budget has different income counts
+                # "number_of_incomes": total_income,  # This may not be the best way if each budget has different income counts
             },
         )
     else:
@@ -104,11 +110,6 @@ def index(request):
 
 
 # budget
-@classmethod
-def create_budget(cls, owner, budget_name):
-    return cls.objects.create(owner=owner, budget_name=budget_name)
-
-
 @login_required
 def create(request):
     if request.method == "POST":
@@ -138,13 +139,17 @@ def create(request):
 @login_required
 def detail(request, budget_id):
     budget = get_object_or_404(PersonalBudget, owner=request.user, id=budget_id)
+    incomes = Income.objects.filter(budget=budget_id)
 
     context = {
         "title": "Budget Detail",
         "budget": budget,
-        "total_income": budget.total_income_count,
+        "total_income": incomes.first().total_income_count
+            if incomes.exists()
+            else 0,
         "total_remaining": budget.remaining_total,
         "expense_count": budget.total_expenses,  # Assuming total_expenses returns the count
+        "total_income_amount" : Income.objects.filter(budget=budget_id).aggregate(Sum("amount"))["amount__sum"] or 0
     }
 
     return render(request, "budgets/detail.html", context)
@@ -321,6 +326,7 @@ def create_expense(request, budget_id):
 @login_required
 def expense_list(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
+    incomes = Income.objects.filter(budget=budget)
 
     if request.method == "POST":
         expense_id = request.POST.get("expense_id")
@@ -338,9 +344,11 @@ def expense_list(request, budget_id):
         "budgets/expenses/expense_list.html",
         {
             "budget": budget,
-            "expenses": budget.get_expenses(),
-            "number_of_incomes": budget.get_incomes().count(),
-            "remaining_total": budget.get_remaining_total(),
+            "expenses": budget.expenses.all(),
+            "number_of_incomes": incomes.first().total_income_count
+            if incomes.exists()
+            else 0,
+            "remaining_total": budget.remaining_total,
         },
     )
 

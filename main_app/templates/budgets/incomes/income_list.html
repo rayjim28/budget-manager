@@ -1,21 +1,41 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block content %}
+<div class="container mt-5 animate__animated animate__fadeIn">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="display-4 mb-4 text-center animate__animated animate__backInDown">{{ budget.budget_name }} Incomes</h1>
 
-<h1>Incomes for {{ budget.budget_name }}</h1>
+            <!-- Button to Add New Income -->
+            <div class="mb-4 text-center">
+                <a href="{% url 'create_income' budget.id %}" class="btn btn-primary animate__animated animate__jello animate__delay-1s">+ Add New Income</a>
+            </div>
 
-<!-- Add a button that redirects to the create_income view -->
-<a href="{% url 'create_income' budget.id %}" class="btn btn-primary">Add New Income</a>
+            <!-- List of Incomes -->
+            {% if incomes %}
+            <div class="list-group animate__animated animate__fadeInUp animate__delay-2s">
+                {% for income in incomes %}
+                <div class="list-group-item d-flex justify-content-between align-items-center animate__animated animate__zoomIn">
+                    <span>{{ income.name }}</span>
+                    <span class="badge bg-primary rounded-pill">${{ income.amount }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info animate__animated animate__fadeIn animate__delay-2s">
+                No incomes found for this budget. Add one now!
+            </div>
+            {% endif %}
 
-<ul>
-{% for income in incomes %}
-    <li>{{ income.name }}: ${{ income.amount }}</li>
-{% endfor %}
-</ul>
+            <!-- Summary -->
+            <div class="mt-5 p-4 bg-light border animate__animated animate__fadeInRight animate__delay-3s">
+                <h5 class="mb-3">Summary</h5>
+                <p><strong>Total Incomes:</strong> {{ income_count }}</p>
+                <p><strong>Total Income Amount:</strong> ${{ total_income }}</p>
+            </div>
 
-<!-- Display the count of incomes and the total income amount -->
-<p><strong>Total Incomes:</strong> {{ total_income }}</p>
-<p><strong>Total Income Amount:</strong> ${{ total_income }}</p>
-
+        </div>
+    </div>
+</div>
 
 <script>
   // Bootstrap validation script
