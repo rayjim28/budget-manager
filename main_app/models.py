@@ -100,6 +100,10 @@ class Income(models.Model):
     def total(self):
         # This will sum the amount of all incomes related to the budget of this income instance.
         return Income.objects.filter(budget=self.budget).aggregate(Sum("amount"))["amount__sum"] or 0
+    
+    @property
+    def all(self):
+        return self.incomes.all()
 
 
     # @property

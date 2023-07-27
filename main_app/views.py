@@ -8,6 +8,7 @@ from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.db.models import Sum
+from django.urls import reverse
 
 
 # Create your views here.
@@ -144,12 +145,13 @@ def detail(request, budget_id):
     context = {
         "title": "Budget Detail",
         "budget": budget,
-        "total_income": incomes.first().total_income_count
-            if incomes.exists()
-            else 0,
+        "total_income": incomes.first().total_income_count if incomes.exists() else 0,
         "total_remaining": budget.remaining_total,
         "expense_count": budget.total_expenses,  # Assuming total_expenses returns the count
-        "total_income_amount" : Income.objects.filter(budget=budget_id).aggregate(Sum("amount"))["amount__sum"] or 0
+        "total_income_amount": Income.objects.filter(budget=budget_id).aggregate(
+            Sum("amount")
+        )["amount__sum"]
+        or 0,
     }
 
     return render(request, "budgets/detail.html", context)
@@ -528,6 +530,9 @@ def expense_delete(request, budget_id, expense_id):
         return HttpResponseBadRequest("You are not authorized to delete this expense.")
 
 
+##############################################################################################################
+
+
 def income_list(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
     incomes = Income.objects.filter(budget=budget)
@@ -576,3 +581,48 @@ def create_income(request, budget_id):
             )
 
     return render(request, "budgets/incomes/create_income.html", {"budget": budget})
+
+
+def income_detail(request, budget_id, income_id):
+    income = get_object_or_404(Income, id=income_id)
+    budget = get_object_or_404(PersonalBudget, id=budget_id)
+    print(
+        f"Showing details for income with id {income_id} of budget with id {budget_id}"
+    )
+    return render(
+        request,
+        "budgets/incomes/income_detail.html",
+        {"income": income, "budget": budget},
+    )
+
+
+def income_edit(request, budget_id, income_id):
+    income = get_object_or_404(Income, id=income_id)
+
+    if request.method == "POST":
+        income.name = request.POST.get("name")
+        income.amount = request.POST.get("amount")
+        income.save()
+
+        # Redirect to the income list view using reverse
+        redirect_url = reverse("income_list", args=[budget_id])
+        return redirect(redirect_url)
+
+    # Handle GET request
+    context = {
+        "income": income,
+        "budget_id": budget_id,
+    }
+    return render(request, "budgets/incomes/income_edit.html", context)
+
+
+def income_delete(request, budget_id, income_id):
+    income = get_object_or_404(Income, id=income_id)
+    if request.method == "POST":
+        income.delete()
+        return redirect("income_list", budget_id=budget_id)
+    return render(
+        request,
+        "budgets/incomes/income_confirm_delete.html",
+        {"income": income, "budget_id": budget_id},
+    )

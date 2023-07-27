@@ -20,9 +20,9 @@ urlpatterns = [
     
     path("budgets/<int:budget_id>/incomes/", views.income_list, name="income_list"),
     path("budgets/<int:budget_id>/incomes/create/", views.create_income, name="create_income"),
-    # path("budgets/<int:budget_id>/incomes/<int:income_id>/", views.income_detail, name="income_detail"),
-    # path("budgets/<int:budget_id>/incomes/<int:income_id>/edit/", views.income_edit, name="income_edit"),
-    # path("budgets/<int:budget_id>/incomes/<int:income_id>/delete/", views.income_delete, name="income_delete"),
+    path("budgets/<int:budget_id>/incomes/<int:income_id>/", views.income_detail, name="income_detail"),
+    path("budgets/<int:budget_id>/incomes/<int:income_id>/edit/", views.income_edit, name="income_edit"),
+    path("budgets/<int:budget_id>/incomes/<int:income_id>/delete/", views.income_delete, name="income_delete"),
 ]
 
 

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron">
+        <h1 class="display-4">Edit Income</h1>
+        <hr class="my-4">
+        
+        <form method="post" action="">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="name">Income Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ income.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount ($)</label>
+                <input type="number" class="form-control" id="amount" name="amount" value="{{ income.amount }}" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+        
+        <div class="mt-4">
+            <a href="{% url 'income_detail' budget_id=budget_id income_id=income.id %}" class="btn btn-secondary">Back to Income Details</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -17,6 +17,9 @@
                 <div class="list-group-item d-flex justify-content-between align-items-center animate__animated animate__zoomIn">
                     <span>{{ income.name }}</span>
                     <span class="badge bg-primary rounded-pill">${{ income.amount }}</span>
+
+                    <!-- Button to View Income Details -->
+                    <a href="{% url 'income_detail' budget.id income.id %}" class="btn btn-info btn-sm ml-2">Details</a>
                 </div>
                 {% endfor %}
             </div>
