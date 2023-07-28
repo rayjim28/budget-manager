@@ -48,8 +48,8 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 INSTALLED_APPS = [
     "main_app",
-    'whitenoise.runserver_nostatic',
-    'bootstrap4',
+    "whitenoise.runserver_nostatic",
+    "bootstrap4",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -100,11 +100,22 @@ WSGI_APPLICATION = "budgetmanager.wsgi.application"
 #     }
 # }
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#     default='postgresql://postgres:postgres@localhost:5432/<name_of_database>',
+#     conn_max_age=600    )
+#     }
+
 DATABASES = {
-    'default': dj_database_url.config(     
-    default='postgresql://postgres:postgres@localhost:5432/<name_of_database>',        
-    conn_max_age=600    )
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "neondb",
+        "USER": "rayjim28",
+        "PASSWORD": "oaQFEt6MSL1v",
+        "HOST": "ep-muddy-truth-19190106.us-east-1.aws.neon.tech",
+        "PORT": "5432",
     }
+}
 
 
 DATABASE_URL = "postgres://rayjim28:oaQFEt6MSL1v@ep-muddy-truth-19190106.us-east-1.aws.neon.tech/neondb"
