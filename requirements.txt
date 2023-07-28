@@ -6,7 +6,9 @@ dj-database-url==2.0.0
 Django==4.2.1
 django-bootstrap4==23.2
 django-environ==0.10.0
+gunicorn==21.2.0
 jmespath==1.0.1
+packaging==23.1
 psycopg2-binary==2.9.6
 python-dateutil==2.8.2
 s3transfer==0.6.1

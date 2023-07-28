@@ -104,14 +104,4 @@ class Income(models.Model):
     @property
     def all(self):
         return self.incomes.all()
-
-
-    # @property
-    # def total_income_count(self):
-    #     return self.related_incomes.count()
-
-    # @property
-    # def total(self):
-    #     return self.related_incomes.aggregate(Sum("amount"))["amount__sum"] or 0
-    
     

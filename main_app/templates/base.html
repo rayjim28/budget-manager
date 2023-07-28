@@ -126,9 +126,7 @@
       }
 
       .animated-back-button:hover {
-        transform: translateX(
-          -5px
-        ); 
+        transform: translateX(-5px);
       }
     </style>
   </head>
@@ -197,5 +195,27 @@
         All Rights Reserved, &copy; 2023 Budget Manager
       </div>
     </footer>
+
+    <script>
+      // Bootstrap validation script
+      (function () {
+        "use strict";
+        var forms = document.querySelectorAll(".needs-validation");
+
+        Array.from(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
   </body>
 </html>
