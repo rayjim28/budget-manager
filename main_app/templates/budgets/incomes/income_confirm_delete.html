@@ -1,11 +1,16 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Confirm Deletion</h2>
-<p>Are you sure you want to delete this income: "{{ income.name }}" worth "{{ income.amount }}"?</p>
+<p>
+  Are you sure you want to delete this income: "{{ income.name }}" worth "{{
+  income.amount }}"?
+</p>
 <form method="post">
-    {% csrf_token %}
-    <input type="submit" value="Yes, Delete" class="btn btn-danger">
-    <a href="{% url 'income_detail' budget_id=budget_id income_id=income.id %}" class="btn btn-secondary">Cancel</a>
+  {% csrf_token %}
+  <input type="submit" value="Yes, Delete" class="btn btn-danger" />
+  <a
+    href="{% url 'income_detail' budget_id=budget_id income_id=income.id %}"
+    class="btn btn-secondary"
+    >Cancel</a
+  >
 </form>
 {% endblock %}

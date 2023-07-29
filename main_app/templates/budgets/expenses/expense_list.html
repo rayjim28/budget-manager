@@ -70,26 +70,4 @@
   <p><strong>Total Incomes:</strong> {{ number_of_incomes }}</p>
   <p><strong>Total Amount After Expenses:</strong> ${{ remaining_total }}</p>
 </div>
-
-<script>
-  // Bootstrap validation script
-  (function () {
-    "use strict";
-    var forms = document.querySelectorAll(".needs-validation");
-
-    Array.from(forms).forEach(function (form) {
-      form.addEventListener(
-        "submit",
-        function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add("was-validated");
-        },
-        false
-      );
-    });
-  })();
-</script>
 {% endblock %}

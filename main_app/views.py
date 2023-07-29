@@ -39,7 +39,9 @@ def signup(request):
     context = {"form": form, "error_message": error_message}
     return render(request, "registration/signup.html", context)
 
+
 ##############################################################################################################
+
 
 # View for the personal budget
 @login_required
@@ -94,7 +96,7 @@ def detail(request, budget_id):
         "budget": budget,
         "total_income": incomes.first().total_income_count if incomes.exists() else 0,
         "total_remaining": budget.remaining_total,
-        "expense_count": budget.total_expenses, 
+        "expense_count": budget.total_expenses,
         "total_income_amount": Income.objects.filter(budget=budget_id).aggregate(
             Sum("amount")
         )["amount__sum"]
@@ -106,6 +108,7 @@ def detail(request, budget_id):
 
 def user_authorized_for_budget(request, budget):
     return request.user == budget.owner
+
 
 @login_required
 def edit(request, budget_id):
@@ -148,7 +151,9 @@ def delete(request, budget_id):
     messages.success(request, "Budget deleted successfully.")
     return redirect("index")
 
+
 ##############################################################################################################
+
 
 @login_required
 def create_expense(request, budget_id):
@@ -206,9 +211,7 @@ def expense_list(request, budget_id):
 def expense_detail(request, budget_id, expense_id):
     expense = get_object_or_404(ExpenseItem, id=expense_id)
     budget = get_object_or_404(PersonalBudget, id=budget_id)
-    print(
-        f"Showing details for expense with id {expense_id} of budget with id {budget_id}"
-    )
+
     return render(
         request,
         "budgets/expenses/expense_detail.html",
@@ -268,7 +271,6 @@ def expense_edit(request, budget_id, expense_id):
 def expense_delete(request, budget_id, expense_id):
     expense = get_object_or_404(ExpenseItem, id=expense_id)
     if request.user == expense.owner:
-        print(f"Deleted expense with id {expense_id} for {request.user}")
         expense.delete()
 
         # Redirect back to the list of expenses after successful deletion
@@ -287,7 +289,6 @@ def expense_delete(request, budget_id, expense_id):
 def income_list(request, budget_id):
     budget = get_object_or_404(PersonalBudget, id=budget_id)
     incomes = Income.objects.filter(budget=budget)
-    print(f"Found {incomes.count()} incomes for {request.user}")  # Print incomes
 
     income_count = incomes.count()
     total_income = incomes.aggregate(Sum("amount"))["amount__sum"] or 0
@@ -337,9 +338,7 @@ def create_income(request, budget_id):
 def income_detail(request, budget_id, income_id):
     income = get_object_or_404(Income, id=income_id)
     budget = get_object_or_404(PersonalBudget, id=budget_id)
-    print(
-        f"Showing details for income with id {income_id} of budget with id {budget_id}"
-    )
+
     return render(
         request,
         "budgets/incomes/income_detail.html",

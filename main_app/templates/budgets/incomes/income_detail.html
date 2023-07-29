@@ -1,5 +1,4 @@
-{% extends 'base.html' %} 
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <div class="container mt-5">
   <div class="jumbotron">
@@ -14,18 +13,32 @@
     <!-- Assuming PersonalBudget model has a 'budget_name' field -->
     <hr class="my-4" />
     <p>
-      <strong>Total incomes in this budget:</strong> {{ income.total_income_count }}
+      <strong>Total incomes in this budget:</strong> {{
+      income.total_income_count }}
     </p>
     <p>
-      <strong>Total amount from all incomes in this budget:</strong> ${{ income.total }}
+      <strong>Total amount from all incomes in this budget:</strong> ${{
+      income.total }}
     </p>
 
     <!-- Edit and Delete Buttons -->
-    <a href="{% url 'income_edit' budget_id=budget.id income_id=income.id %}" class="btn btn-primary mr-2">Edit</a>
-    <a href="{% url 'income_delete' budget_id=budget.id income_id=income.id %}" class="btn btn-danger">Delete</a>
-    
+    <a
+      href="{% url 'income_edit' budget_id=budget.id income_id=income.id %}"
+      class="btn btn-primary mr-2"
+      >Edit</a
+    >
+    <a
+      href="{% url 'income_delete' budget_id=budget.id income_id=income.id %}"
+      class="btn btn-danger"
+      >Delete</a
+    >
+
     <!-- Back Button to return to incomes page -->
-    <a href="{% url 'income_list' budget_id=budget.id %}" class="btn btn-secondary animated-back-button">← Back to Income List</a>
+    <a
+      href="{% url 'income_list' budget_id=budget.id %}"
+      class="btn btn-secondary animated-back-button"
+      >← Back to Income List</a
+    >
   </div>
 </div>
 

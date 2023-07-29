@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-5">
   <div class="text-center mb-5 animate__animated animate__zoomIn">
     <h1 class="display-4">Create Personal Budget</h1>
@@ -13,45 +11,23 @@
 
         <div class="mb-3">
           <label for="name" class="form-label">Budget Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Enter your budget name" required>
-          <div class="invalid-feedback">
-            Please enter a budget name.
-          </div>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Enter your budget name"
+            required
+          />
+          <div class="invalid-feedback">Please enter a budget name.</div>
         </div>
-
-        <!-- <div class="mb-3">
-          <label for="amount" class="form-label">Initial Budget</label>
-          <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter your income" required>
-          <div class="invalid-feedback">
-            Please enter an income amount.
-          </div>
-        </div> -->
-
         <div class="mb-3">
-          <button type="submit" class="btn btn-primary btn-lg btn-block">Create Budget</button>
+          <button type="submit" class="btn btn-primary btn-lg btn-block">
+            Create Budget
+          </button>
         </div>
       </form>
     </div>
   </div>
 </div>
-
-<script>
-  // Bootstrap validation script
-  (function () {
-    'use strict'
-    var forms = document.querySelectorAll('.needs-validation')
-
-    Array.from(forms)
-      .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-  })()
-</script>
-
 {% endblock %}

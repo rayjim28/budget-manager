@@ -1,64 +1,39 @@
-{% extends 'base.html' %}
-
-{% block content %}
-
-<style>
-  /* Gradient background */
-  .gradient-bg {
-    background: linear-gradient(to right, #1e3c72, #2a5298);
-  }
-
-  /* Hover effect for buttons */
-  .btn-hover-effect:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s;
-  }
-  
-  /* Layered card effect (optional) */
-  .layered-card {
-    position: relative;
-  }
-
-  .layered-card:before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    border: 1px solid rgba(0,0,0,0.1);
-    z-index: -1;
-  }
-
-  .layered-card:after {
-    content: "";
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    border: 1px solid rgba(0,0,0,0.1);
-    z-index: -2;
-  }
-</style>
+{% extends 'base.html' %} {% block content %}
 
 <div class="container my-5">
-  <div class="card border-0 shadow-lg animate__animated animate__zoomIn layered-card">
+  <div
+    class="card border-0 shadow-lg animate__animated animate__zoomIn layered-card"
+  >
     <div class="card-header gradient-bg text-white text-center">
-      <h1 class="display-4 animate__animated animate__fadeInDown">About Budget Manager</h1>
-      <small class="text-light animate__animated animate__pulse animate__infinite animate__slower">Track and Organize Your Finances</small>
+      <h1 class="display-4 animate__animated animate__fadeInDown">
+        About Budget Manager
+      </h1>
+      <small
+        class="text-light animate__animated animate__pulse animate__infinite animate__slower"
+        >Track and Organize Your Finances</small
+      >
     </div>
     <div class="card-body bg-light animate__animated animate__fadeInUp">
       <p class="text-justify lead">
-        <span class="fw-bold">Budget Manager</span> is a platform for managing personal finance. It provides
-        an intuitive interface, allowing users to effortlessly track their budget, manage expenses, and gain insights into their savings and spending patterns.
+        <span class="fw-bold">Budget Manager</span> is a platform for managing
+        personal finance. It provides an intuitive interface, allowing users to
+        effortlessly track their budget, manage expenses, and gain insights into
+        their savings and spending patterns.
       </p>
-      <hr>
+      <hr />
       <div class="text-center">
         {% if user.is_authenticated %}
-          <a href="{% url 'index' %}" class="btn btn-primary btn-hover-effect animate__animated animate__bounce">Create A Budgets</a>
+        <a
+          href="{% url 'index' %}"
+          class="btn btn-primary btn-hover-effect animate__animated animate__bounce"
+          >Create A Budgets</a
+        >
         {% else %}
-          <a href="{% url 'signup' %}" class="btn btn-primary btn-hover-effect animate__animated animate__bounce">Get Started</a>
+        <a
+          href="{% url 'signup' %}"
+          class="btn btn-primary btn-hover-effect animate__animated animate__bounce"
+          >Get Started</a
+        >
         {% endif %}
       </div>
     </div>

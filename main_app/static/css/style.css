@@ -1,14 +1,203 @@
+/* Global Styles */
+body,
+html {
+    height: 100vh;
+}
+
 body {
     display: flex;
-    min-height: 100vh;
     flex-direction: column;
+    font-family: "Nunito", sans-serif;
+    background-color: #f4f6f9;
 }
 
 main {
-    flex: 1 0 auto;
+    flex: 1;
 }
 
-footer.page-footer {
-    padding-top: 0;
-    text-align: right;
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+/* Navbar styles */
+.navbar-dark.bg-dark {
+    background: linear-gradient(to right, #2a5298, #1e3c72);
+}
+
+/* Footer Styles */
+.page-footer {
+    background-color: #2a5298;
+    padding: 20px 0;
+    color: white;
+}
+
+.card-footer {
+    background-color: #1e3c72;
+    border-top: none;
+}
+
+/* Animation styles */
+.footer-animation {
+    visibility: hidden;
+    animation-name: fadeInUp;
+    animation-fill-mode: forwards;
+    animation-duration: 1.5s;
+    animation-delay: 0.5s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    color: #fff;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* Input fields */
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Buttons */
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #0062cc;
+    border-color: #0056b3;
+}
+
+/* Centering the button */
+.text-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.animated-back-button {
+    transition: transform 0.3s ease;
+}
+
+.animated-back-button:hover {
+    transform: translateX(-5px);
+}
+
+/* ########################################################################################### */
+
+/* Home Page */
+/* gradient background for the jumbotron */
+.jumbotron-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+}
+
+/* Hover effect for the cards */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ########################################################################################### */
+/* About Page */
+/* Gradient background */
+.gradient-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+}
+
+/* Hover effect for buttons */
+.btn-hover-effect:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+/* Layered card effect (optional) */
+.layered-card {
+    position: relative;
+}
+
+.layered-card:before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: -1;
+}
+
+.layered-card:after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: -2;
+}
+
+/* ########################################################################################### */
+/* sign Up page */
+/* Gradient background */
+.gradient-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+}
+
+/* Style for form fields */
+.signup-form input[type="text"],
+.signup-form input[type="password"],
+.signup-form input[type="email"] {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect for button */
+.btn-hover-effect:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+/* Animation for error message */
+.animate-error {
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* ############################################################################### */
+/* Log In Page */
+/* Gradient background */
+.gradient-bg {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+}
+
+/* Style for form fields */
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"] {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect for button */
+.btn-hover-effect:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
 }

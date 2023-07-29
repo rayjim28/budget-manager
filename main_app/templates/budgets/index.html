@@ -1,11 +1,13 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="container mt-5">
   <div class="text-center mb-5">
     <h1 class="display-4 mb-4 animate__animated animate__zoomIn">Budgets</h1>
-    <!-- "Add New Budget" Button -->
-    <a href="{% url 'create' %}" class="btn btn-success btn-lg animate__animated animate__pulse animate__infinite animate__slower">+ Add New Budget</a>
+    <!-- Add New Budget" Button -->
+    <a
+      href="{% url 'create' %}"
+      class="btn btn-success btn-lg animate__animated animate__pulse animate__infinite animate__slower"
+      >+ Add New Budget</a
+    >
   </div>
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -14,18 +16,30 @@
       <div class="card shadow-lg h-100 animate__animated animate__fadeInUp">
         <div class="card-header bg-dark text-light">
           <h5 class="card-title m-0">
-            <a href="{% url 'expense_list' item.budget.id %}" class="text-decoration-none text-light">{{ item.budget.budget_name }}</a>
+            <a
+              href="{% url 'expense_list' item.budget.id %}"
+              class="text-decoration-none text-light"
+              >{{ item.budget.budget_name }}</a
+            >
           </h5>
         </div>
         <div class="card-body">
           <p class="card-text">
             <strong>Total Income:</strong> ${{ item.total_income}}
-          </p> 
+          </p>
           <p class="card-text">
             <strong>Total Remaining:</strong> ${{ item.remaining_total }}
           </p>
-          <a href="{% url 'detail' item.budget.id %}" class="btn btn-primary btn-sm">Details</a>
-          <form action="{% url 'delete' item.budget.id %}" method="post" class="d-inline-block">
+          <a
+            href="{% url 'detail' item.budget.id %}"
+            class="btn btn-primary btn-sm"
+            >Details</a
+          >
+          <form
+            action="{% url 'delete' item.budget.id %}"
+            method="post"
+            class="d-inline-block"
+          >
             {% csrf_token %}
             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
           </form>
@@ -41,26 +55,4 @@
     {% endfor %}
   </div>
 </div>
-
-<script>
-  // Bootstrap validation script
-  (function () {
-    "use strict";
-    var forms = document.querySelectorAll(".needs-validation");
-
-    Array.from(forms).forEach(function (form) {
-      form.addEventListener(
-        "submit",
-        function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add("was-validated");
-        },
-        false
-      );
-    });
-  })();
-</script>
 {% endblock %}

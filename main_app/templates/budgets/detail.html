@@ -8,10 +8,6 @@
         </div>
 
         <div class="card-body">
-          <!-- Budget Details -->
-          <!-- <p class="mb-3">
-            <strong>Total Income Amount:</strong> ${{ budget.budget_amount }}
-          </p> -->
           <p class="mb-3">
             <strong>Total Income Amount:</strong> ${{ total_income_amount }}
           </p>
@@ -22,9 +18,7 @@
             <strong>Creation Date:</strong> {{ budget.creation_date }}
           </p>
           <!-- Display total income and total remaining -->
-          <p class="mb-3">
-            <strong>Total Incomes:</strong> {{ total_income }}
-          </p>
+          <p class="mb-3"><strong>Total Incomes:</strong> {{ total_income }}</p>
           <p class="mb-3">
             <strong>Total Remaining:</strong> ${{ total_remaining }}
           </p>
@@ -61,26 +55,4 @@
     </div>
   </div>
 </div>
-
-<script>
-  // Bootstrap validation script
-  (function () {
-    "use strict";
-    var forms = document.querySelectorAll(".needs-validation");
-
-    Array.from(forms).forEach(function (form) {
-      form.addEventListener(
-        "submit",
-        function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add("was-validated");
-        },
-        false
-      );
-    });
-  })();
-</script>
 {% endblock %}
