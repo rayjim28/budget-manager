@@ -1,73 +1,58 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
 
+{% block content %}
 <div class="container mt-5">
   <div class="text-center mb-5">
     <h1 class="display-4 mb-4 animate__animated animate__zoomIn">Expenses</h1>
-    <!-- "Create Expense" Button -->
-    <a
-      href="{% url 'create_expense' budget.id %}"
-      class="btn btn-success btn-lg animate__animated animate__pulse animate__infinite animate__slower"
-      >+ Create Expense</a
-    >
+    <a href="{% url 'create_expense' budget.id %}" class="btn btn-success btn-lg mb-3 animate__animated animate__pulse animate__infinite animate__slower">+ Create Expense</a>
   </div>
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for expense in expenses %}
     <div class="col">
       <div class="card shadow-lg h-100 animate__animated animate__fadeInUp">
-        <div class="card-header bg-dark text-light">
+        <div class="card-header bg-primary text-light">
           <h5 class="card-title m-0">
-            <a
-              href="{% url 'expense_detail' budget.id expense.id %}"
-              class="text-decoration-none text-light"
-              >{{ expense.item_name }}</a
-            >
+            <a href="{% url 'expense_detail' budget.id expense.id %}" class="text-decoration-none text-light">{{ expense.item_name }}</a>
           </h5>
         </div>
         <div class="card-body">
-          <h6 class="card-subtitle mb-3 text-uppercase text-info">
-            {{ expense.item_category }}
+          <h6 class="card-subtitle mb-3 text-uppercase">
+            <i class="fas fa-tags mr-2"></i> {{ expense.item_category }}
           </h6>
 
           {% if expense.purchase_date %}
           <p class="card-text">
-            <small class="text-muted">Date: {{ expense.purchase_date }}</small>
+            <i class="fas fa-calendar-alt mr-1"></i> <small class="text-muted">Date: {{ expense.purchase_date }}</small>
           </p>
           {% else %}
           <p class="card-text"><small class="text-muted">Date: N/A</small></p>
           {% endif %}
 
           <div class="mb-3">
-            <span class="badge bg-secondary p-2">${{ expense.item_cost }}</span>
+            <span class="badge bg-secondary p-2"><i class="fas fa-dollar-sign mr-1"></i>{{ expense.item_cost }}</span>
           </div>
 
-          <a
-            href="{% url 'expense_edit' budget.id expense.id %}"
-            class="btn btn-warning btn-sm"
-            >Edit</a
-          >
-          <form
-            action="{% url 'expense_list' budget.id %}"
-            method="POST"
-            class="d-inline"
-          >
+          <a href="{% url 'expense_edit' budget.id expense.id %}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
+          <form action="{% url 'expense_list' budget.id %}" method="POST" class="d-inline">
             {% csrf_token %}
             <input type="hidden" name="expense_id" value="{{ expense.id }}" />
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</button>
           </form>
         </div>
       </div>
     </div>
     {% empty %}
     <div class="col">
-      <div class="alert alert-info animate__animated animate__fadeIn">
-        No expenses found.
-      </div>
+      <div class="alert alert-info animate__animated animate__fadeIn">No expenses found.</div>
     </div>
     {% endfor %}
   </div>
+
   <!-- Display the count of incomes and the total amount -->
-  <p><strong>Total Incomes:</strong> {{ number_of_incomes }}</p>
-  <p><strong>Total Amount After Expenses:</strong> ${{ remaining_total }}</p>
+  <div class="mt-4">
+    <p><strong><i class="fas fa-wallet mr-2"></i>Total Incomes:</strong> {{ number_of_incomes }}</p>
+    <p><strong><i class="fas fa-balance-scale mr-2"></i>Total Amount After Expenses:</strong> ${{ remaining_total }}</p>
+  </div>
 </div>
 {% endblock %}

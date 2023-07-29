@@ -120,11 +120,9 @@ def edit(request, budget_id):
 
     if request.method == "POST":
         budget_name = request.POST.get("name")
-        budget_amount = request.POST.get("amount")
 
-        if budget_name and budget_amount:
+        if budget_name:  # Only check if budget_name is available
             budget.budget_name = budget_name
-            budget.budget_amount = budget_amount
             budget.save()
 
             messages.success(request, "Budget updated successfully!")
@@ -322,9 +320,6 @@ def create_income(request, budget_id):
             )
             income.save()
 
-            print(
-                f"Added income '{income_name}' with amount {income_amount} for budget with id {budget_id}"
-            )
             messages.success(request, "Income added successfully!")
             return redirect("income_list", budget_id=budget_id)
         else:
@@ -369,6 +364,7 @@ def income_edit(request, budget_id, income_id):
 def income_delete(request, budget_id, income_id):
     income = get_object_or_404(Income, id=income_id)
     if request.method == "POST":
+        income.amount = request.POST.get("amount")
         income.delete()
         return redirect("income_list", budget_id=budget_id)
     return render(

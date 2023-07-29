@@ -20,7 +20,7 @@
       <!-- List of Incomes -->
       {% if incomes %}
       <div
-        class="list-group animate__animated animate__fadeInUp animate__delay-2s"
+        class="list-group animate__animated animate__fadeInUp animate__delay-0.5s"
       >
         {% for income in incomes %}
         <div
@@ -42,7 +42,7 @@
       </div>
       {% else %}
       <div
-        class="alert alert-info animate__animated animate__fadeIn animate__delay-2s"
+        class="alert alert-info animate__animated animate__fadeIn animate__delay-1s"
       >
         No incomes found for this budget. Add one now!
       </div>
@@ -50,7 +50,7 @@
 
       <!-- Summary -->
       <div
-        class="mt-5 p-4 bg-light border animate__animated animate__fadeInRight animate__delay-3s"
+        class="mt-5 p-4 bg-light border animate__animated animate__fadeInRight animate__delay-0.5s"
       >
         <h5 class="mb-3">Summary</h5>
         <p><strong>Total Incomes:</strong> {{ income_count }}</p>

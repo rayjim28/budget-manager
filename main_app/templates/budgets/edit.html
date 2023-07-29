@@ -1,34 +1,27 @@
-{% extends 'base.html' %} {% block content %}
-<div class="container mt-4">
-  <h2>Edit Budget</h2>
-  <form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="name">Budget Name:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="name"
-        name="name"
-        value="{{ budget.budget_name }}"
-        required
-      />
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Edit Budget</h2>
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Budget Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ budget.budget_name }}" required />
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-block animate__animated animate__pulse animate__delay-1s">Save Changes</button>
+                            <a href="{% url 'detail' budget.id %}" class="btn btn-secondary mt-2 animate__animated animate__pulse animate__delay-2s">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-      <label for="amount">Budget Amount:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="amount"
-        name="amount"
-        value="{{ budget.budget_amount }}"
-        required
-      />
-    </div>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-  </form>
-  <a href="{% url 'detail' budget.id %}" class="btn btn-secondary mt-3"
-    >Cancel</a
-  >
 </div>
+
 {% endblock %}
