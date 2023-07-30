@@ -1,53 +1,55 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="text-center mb-5 animate__animated animate__zoomIn">
-    <h2 class="display-4">Edit Expense</h2>
-  </div>
+<div class="container mt-5 animate__animated animate__fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="text-center mb-5 animate__animated animate__zoomIn">
+        <h2 class="display-4">Edit Expense</h2>
+      </div>
 
-  <div class="card shadow-lg animate__animated animate__fadeIn">
-    <div class="card-body">
-      <form method="POST" action="{% url 'expense_edit' budget.id expense.id %}" class="needs-validation" novalidate>
-        {% csrf_token %}
+      <div class="card shadow-lg animate__animated animate__fadeInUp">
+        <div class="card-body">
+          <form method="POST" action="{% url 'expense_edit' budget.id expense.id %}" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="item_name" class="form-label">Item/Bill Name:</label>
+              <input type="text" class="form-control" name="item_name" value="{{ expense.item_name }}" required>
+              <div class="invalid-feedback">
+                Please enter an item name.
+              </div>
+            </div>
 
-        <div class="mb-3">
-          <label for="item_name" class="form-label">Item Name:</label>
-          <input type="text" class="form-control" name="item_name" value="{{ expense.item_name }}" required>
-          <div class="invalid-feedback">
-            Please enter an item name.
-          </div>
+            <div class="mb-3">
+              <label for="item_cost" class="form-label">Item/Bill Cost:</label>
+              <input type="number" class="form-control" name="item_cost" value="{{ expense.item_cost }}" required>
+              <div class="invalid-feedback">
+                Please enter the item cost.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="item_category" class="form-label">Item Category:</label>
+              <select name="item_category" class="form-select">
+                <option value="🏠" {% if expense.item_category == '🏠' %}selected{% endif %}>Housing 🏠</option>
+                <option value="🏥" {% if expense.item_category == '🏥' %}selected{% endif %}>Medical 🏥</option>
+                <option value="🛒" {% if expense.item_category == '🛒' %}selected{% endif %}>Groceries 🛒</option>
+                <option value="🚙" {% if expense.item_category == '🚙' %}selected{% endif %}>Car 🚙</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="purchase_date" class="form-label">Purchase/Due Date:</label>
+              <input type="date" class="form-control" name="purchase_date" value="{{ expense.purchase_date }}">
+            </div>
+
+            <div class="text-center mt-4">
+              <input type="submit" class="btn btn-primary btn-lg" value="Save">
+            </div>
+          </form>
         </div>
-
-        <div class="mb-3">
-          <label for="item_cost" class="form-label">Item Cost:</label>
-          <input type="number" class="form-control" name="item_cost" value="{{ expense.item_cost }}" required>
-          <div class="invalid-feedback">
-            Please enter the item cost.
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="item_category" class="form-label">Item Category:</label>
-          <select name="item_category" class="form-select">
-            <option value="🏠" {% if expense.item_category == '🏠' %}selected{% endif %}>Housing 🏠</option>
-            <option value="🏥" {% if expense.item_category == '🏥' %}selected{% endif %}>Medical 🏥</option>
-            <option value="🛒" {% if expense.item_category == '🛒' %}selected{% endif %}>Groceries 🛒</option>
-            <option value="🚙" {% if expense.item_category == '🚙' %}selected{% endif %}>Car 🚙</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label for="purchase_date" class="form-label">Purchase Date:</label>
-          <input type="date" class="form-control" name="purchase_date" value="{{ expense.purchase_date }}">
-        </div>
-
-        <div class="mb-3">
-          <input type="submit" class="btn btn-primary" value="Save">
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>

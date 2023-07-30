@@ -1,10 +1,14 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<div class="container mt-5">
-  <div class="text-center mb-5 animate__animated animate__zoomIn">
-    <h3 class="display-4">Add Expense</h3>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 animate__animated animate__fadeIn">
+  
+  <div class="text-center mb-5">
+    <h1 class="display-4 animate__animated animate__zoomIn">Add Expense</h1>
   </div>
 
-  <div class="card shadow-lg animate__animated animate__fadeIn">
+  <div class="card shadow-lg animate__animated animate__fadeInUp">
     <div class="card-body">
       <form
         method="POST"
@@ -13,37 +17,42 @@
         novalidate
       >
         {% csrf_token %}
-
-        <div class="mb-3">
+        
+        <div class="mb-4">
           <label for="item_name" class="form-label">Item/Bill Name</label>
           <input
             type="text"
             class="form-control"
             id="item_name"
             name="item_name"
-            placeholder="Item/Bill Name"
+            placeholder="E.g. Electricity Bill"
             required
           />
-          <div class="invalid-feedback">Please enter an item/bill name.</div>
+          <div class="invalid-feedback">
+            Please enter an item/bill name.
+          </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <label for="item_cost" class="form-label">Item/Bill Cost</label>
-          <input
-            type="number"
-            step="0.01"
-            class="form-control"
-            id="item_cost"
-            name="item_cost"
-            placeholder="$0.00"
-            required
-          />
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              step="0.01"
+              class="form-control"
+              id="item_cost"
+              name="item_cost"
+              placeholder="E.g. 150.50"
+              required
+            />
+          </div>
           <div class="invalid-feedback">
             Please enter the cost of the item/bill.
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <label for="item_category" class="form-label">Item Category</label>
           <select
             class="form-control"
@@ -56,10 +65,12 @@
             <option value="🛒">Groceries 🛒</option>
             <option value="🚙">Car 🚙</option>
           </select>
-          <div class="invalid-feedback">Please select a category.</div>
+          <div class="invalid-feedback">
+            Please select a category.
+          </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <label for="purchase_date" class="form-label">Purchase Date</label>
           <input
             type="date"
@@ -68,14 +79,17 @@
             name="purchase_date"
             required
           />
-          <div class="invalid-feedback">Please select a purchase date.</div>
+          <div class="invalid-feedback">
+            Please select a purchase date.
+          </div>
         </div>
 
-        <div class="mb-3">
-          <button type="submit" class="btn btn-primary">Add</button>
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary btn-lg">Add Expense</button>
         </div>
       </form>
     </div>
   </div>
+
 </div>
 {% endblock %}

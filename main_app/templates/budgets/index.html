@@ -18,10 +18,10 @@
         </div>
         <div class="card-body">
           <p class="card-text">
-            <i class="fas fa-coins mr-2"></i><strong>Total Income:</strong> ${{ item.total_income }}
+            <i class="fas fa-coins text-primary mr-2""></i><strong>Total Income:</strong> ${{ item.total_income }}
           </p>
           <p class="card-text">
-            <i class="fas fa-wallet mr-2"></i><strong>Total Remaining:</strong> ${{ item.remaining_total }}
+            <i class="fas fa-hand-holding-usd text-warning mr-2"></i><strong>Total Remaining:</strong> ${{ item.remaining_total }}
           </p>
           <a href="{% url 'detail' item.budget.id %}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Details</a>
           <form action="{% url 'delete' item.budget.id %}" method="post" class="d-inline-block">

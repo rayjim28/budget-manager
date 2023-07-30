@@ -1,45 +1,44 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container mt-5 animate__animated animate__fadeIn">
+  <div class="text-center mb-5">
+    <h1 class="display-4 mb-4 animate__animated animate__backInDown">
+      {{ budget.budget_name }} Incomes
+    </h1>
+
+    <!-- Button to Add New Income -->
+    <a
+      href="{% url 'create_income' budget.id %}"
+      class="btn btn-primary btn-lg animate__animated animate__jello animate__delay-1s"
+      >+ Add New Income</a
+    >
+  </div>
+
+  <!-- List of Incomes -->
   <div class="row">
     <div class="col-md-8 offset-md-2">
-      <h1
-        class="display-4 mb-4 text-center animate__animated animate__backInDown"
-      >
-        {{ budget.budget_name }} Incomes
-      </h1>
-
-      <!-- Button to Add New Income -->
-      <div class="mb-4 text-center">
-        <a
-          href="{% url 'create_income' budget.id %}"
-          class="btn btn-primary animate__animated animate__jello animate__delay-1s"
-          >+ Add New Income</a
-        >
-      </div>
-
-      <!-- List of Incomes -->
       {% if incomes %}
-      <div
-        class="list-group animate__animated animate__fadeInUp animate__delay-0.5s"
+      <ul
+        class="list-group mb-5 animate__animated animate__fadeInUp animate__delay-0.5s"
       >
         {% for income in incomes %}
-        <div
-          class="list-group-item d-flex justify-content-between align-items-center animate__animated animate__zoomIn"
-        >
-          <span>{{ income.name }}</span>
-          <span class="badge bg-primary rounded-pill"
-            >${{ income.amount }}</span
-          >
-
-          <!-- Button to View Income Details -->
-          <a
-            href="{% url 'income_detail' budget.id income.id %}"
-            class="btn btn-info btn-sm ml-2"
-            >Details</a
-          >
-        </div>
+        <li class="list-group-item shadow-lg">
+          <div class="d-flex justify-content-between align-items-center">
+            <span
+              ><i class="fas fa-dollar-sign mr-2"></i>{{ income.name }}</span
+            >
+            <div>
+              <span class="badge bg-primary p-2">${{ income.amount }}</span>
+              <!-- Button to View Income Details -->
+              <a
+                href="{% url 'income_detail' budget.id income.id %}"
+                class="btn btn-info btn-sm ml-3"
+                >Details</a
+              >
+            </div>
+          </div>
+        </li>
         {% endfor %}
-      </div>
+      </ul>
       {% else %}
       <div
         class="alert alert-info animate__animated animate__fadeIn animate__delay-1s"
@@ -47,14 +46,23 @@
         No incomes found for this budget. Add one now!
       </div>
       {% endif %}
+    </div>
+  </div>
 
-      <!-- Summary -->
+  <!-- Summary -->
+  <div class="row mt-4">
+    <div class="col-md-8 offset-md-2">
       <div
-        class="mt-5 p-4 bg-light border animate__animated animate__fadeInRight animate__delay-0.5s"
+        class="p-4 bg-light border rounded animate__animated animate__fadeInRight animate__delay-0.5s"
       >
         <h5 class="mb-3">Summary</h5>
-        <p><strong>Total Incomes:</strong> {{ income_count }}</p>
-        <p><strong>Total Income Amount:</strong> ${{ total_income }}</p>
+        <p>
+          <i class="fas fa-coins mr-2"></i><strong>Total Incomes:</strong> {{ income_count }}
+        </p>
+        <p>
+          <i class="fas fa-wallet mr-2"></i
+          ><strong>Total Income Amount:</strong> ${{ total_income }}
+        </p>
       </div>
     </div>
   </div>
