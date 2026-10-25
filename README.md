@@ -1,50 +1,43 @@
-# BudgetManager 🌐💰
+# BudgetWise — Django finance tracker
 
-BudgetManager is a web-based application that empowers users to take control of their finances. With a sleek and intuitive user interface, BudgetManager provides a comprehensive suite of tools to track income, expenses, and manage personal budgets.
+This update retains the original Budget Manager Django application and its database models, **not a new database schema**.
+The original `main_app.PersonalBudget`, `ExpenseItem`, `Income` models and all seven historic migrations remain. Existing account/budget/expense/income data can be read from the same PostgreSQL database after validating the staged migration plan.
 
-## Screenshot 
-![Imgur](https://i.imgur.com/VyetwuH.png)
+## Run locally with an isolated SQLite database
 
-## Features 🌟
+Requires Python 3.12+.
 
-- **User Authentication**: Sign up, log in, and manage your personal financial dashboard securely.
-- **Budgeting**: Create and manage multiple budgets.
-- **Income Tracking**: Record and view all sources of income.
-- **Expense Tracking**: Categorize and track every penny you spend.
-- **Visual Insights**: At-a-glance visual breakdowns of your financial habits.
-- **Mobile Responsive**: Access your financial data on-the-go from any device.
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+python manage.py migrate
+python manage.py test
+python manage.py runserver
+```
 
-## Technologies Used 💼
+Create an account at `/signup/`. The dashboard is at `/dashboard/`; budgets, transactions and reports use the original data models. No sample financial records are inserted.
 
-- **Language**: Python 3.9.2
-- **Backend Framework**: Django 4.2.1
-- **Database**: PostgreSQL
-- **Frontend**:
-  - HTML5
-  - CSS3 (with animations)
-  - Bootstrap
-- **Authentication**: Django's built-in User Authentication
-- **Version Control**: Git
-- **Deployment**: Render
+## Important about original data
 
-## Icebox Items 📦❄️
+- **Never point an untested deployment at the production database.** Back up the PostgreSQL database first and test against a restored copy.
+- Original `Income` records have no date column, so income can be shown in overall totals but **not** honestly plotted as monthly income. The spending chart shows dated expenses only. Monthly income charts would require a future schema migration.
+- Original budgets represent named groups of income and expenses. Budget bars therefore compare spending against recorded income, not against an invented per-category spending limit.
+- The old ZIP contained a plaintext PostgreSQL credential and hardcoded Django secret. They have been removed from this source. **Rotate both secrets** and check Git history if the repository was ever public.
+- Only remove/change old code after a tested replacement branch is approved. Preserve the old main branch and Render settings for rollback.
 
-These are the features and improvements I'm excited to implement in the future. Stay tuned!
+## Deploy safely to Render
 
-- **AI Predictions** 🤖: Based on your monthly habits, predict future expenses and recommend savings strategies.
-- **Export Data** 📤: Export your financial data in various formats like CSV, Excel, and PDF.
-- **Dark Mode** 🌙: A sleek, battery-saving dark mode for late-night budget planning.
-- **Graphs & Visualizations** 📊: Enhanced charts to visually represent income vs. expenses over time.
-- **Notifications** 🔔: Reminders for upcoming bills and milestones in savings.
-- **Integration with Banking APIs** 🌐💳: Seamlessly connect with your bank for real-time transaction tracking.
-- **Goal Setting & Tracking** 🎯: Set financial goals and track your progress towards achieving them.
-- **Multi-Currency Support** 💱: For those who travel or have international transactions.
-- **Tutorial & Onboarding** 📘: Guided tour for new users to get the most out of BudgetManager.
+Create a staging Web Service and **separate staging database** first. Set `DATABASE_URL` to the staging database, `DJANGO_SECRET_KEY` to a secure random key, `DJANGO_DEBUG=false`, and `DJANGO_ALLOWED_HOSTS` / `DJANGO_CSRF_TRUSTED_ORIGINS` for your hostname. Set `PYTHON_VERSION=3.12.8` if needed.
 
-## Feedback & Contributions 💌
+- Build: `./build.sh`
+- Start: `gunicorn budgetmanager.wsgi:application --bind 0.0.0.0:$PORT`
+- Run migrations separately against the staging database: `python manage.py migrate --noinput`
+- Test signup, login/logout, budgets, income, expenses, reports, CSV, and user separation before production.
 
-Your feedback is invaluable! If you have any suggestions or want to contribute to BudgetManager, please feel free to [open an issue on my GitHub repo](https://github.com/rayjim28/budget-manager).
+Do not overwrite the original live service or its database just by pushing these files.
 
-### Get Started 🚀
+## Design
 
-## Visit The App: [Budget Manager](https://budget-manager-qdrj.onrender.com)
+BudgetWise uses forest green, sage and warm ivory with a restrained clay accent. The UI is Django templates and CSS, not a separate React application. The Python package remains named `budgetmanager` to preserve imports and deployment configuration.
