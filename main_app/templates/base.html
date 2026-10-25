@@ -1,127 +1,38 @@
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Budget Manager</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <style>
-      @keyframes fadeInUp {
-        0% {
-          transform: translateY(20px);
-          visibility: visible;
-          opacity: 0;
-        }
-
-        100% {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <header class="navbar-fixed">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a class="navbar-brand" href="{% url 'home' %}">Budget Manager</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">About</a>
-              </li>
-            </ul>
-            <ul class="navbar-nav">
-              {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Budgets</a>
-              </li>
-              {% if budget %}
-              <!-- New link for the Expense List -->
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'expense_list' budget.id %}"
-                  >Expense List</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'income_list' budget.id %}"
-                  >Income Sources</a
-                >
-              </li>
-              {% endif %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-              </li>
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Log In</a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <main class="container my-5">{% block content %} {% endblock %}</main>
-
-    <footer class="page-footer text-center mt-5 footer-animation">
-      <div class="card-footer text-center text-muted">
-        All Rights Reserved, &copy; 2023 Budget Manager
-      </div>
-    </footer>
-
-    <script>
-      // Bootstrap validation script
-      (function () {
-        "use strict";
-        var forms = document.querySelectorAll(".needs-validation");
-
-        Array.from(forms).forEach(function (form) {
-          form.addEventListener(
-            "submit",
-            function (event) {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-              form.classList.add("was-validated");
-            },
-            false
-          );
-        });
-      })();
-    </script>
-  </body>
-</html>
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BudgetWise helps you track income, expenses, and personal budgets.">
+<title>{% block title %}BudgetWise{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script src="{% static 'js/app.js' %}" defer></script>
+</head><body class="{% if not user.is_authenticated %}auth-body{% endif %}">
+{% if user.is_authenticated %}
+<div class="app-shell">
+<aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+<a class="brand" href="{% url 'dashboard' %}"><span class="brand-icon" aria-hidden="true">◈</span> <span class="brand-name">Budget<span class="brand-light">Wise</span></span></a>
+<div class="workspace-note"><span class="workspace-dot"></span> PERSONAL FINANCE</div>
+<nav class="side-nav"><span class="nav-heading">WORKSPACE</span>
+<a class="nav-link {% if section == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><span class="nav-icon">◫</span> Overview</a>
+<a class="nav-link {% if section == 'budgets' %}active{% endif %}" href="{% url 'index' %}"><span class="nav-icon">◎</span> Budgets</a>
+<a class="nav-link {% if section == 'transactions' %}active{% endif %}" href="{% url 'transactions' %}"><span class="nav-icon">⇄</span> Transactions</a>
+<a class="nav-link {% if section == 'reports' %}active{% endif %}" href="{% url 'reports' %}"><span class="nav-icon">▥</span> Reports</a>
+<div class="sidebar-extra"><span class="nav-heading">ACCOUNT</span><a class="nav-link" href="{% url 'about' %}"><span class="nav-icon">ⓘ</span> About</a></div>
+</nav>
+<div class="sidebar-bottom"><div class="sidebar-advice"><span class="advice-icon">◈</span><h3>Your money, in focus.</h3><p>Keep track of the details without losing sight of the big picture.</p></div>
+<div class="sidebar-user"><span class="avatar">{{ user.username|first|upper }}</span><div class="sidebar-user-info"><strong>{{ user.username }}</strong><small>Personal account</small></div></div>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="logout-btn">Sign out <span aria-hidden="true">↗</span></button></form></div>
+</aside>
+<div class="site-content"><header class="topbar">
+<button type="button" class="mobile-menu icon-button" id="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+<div class="breadcrumb">PERSONAL FINANCE <span class="crumb-chevron">/</span><strong>{% if section == 'dashboard' %}Overview{% elif section == 'budgets' %}Budgets{% elif section == 'transactions' %}Transactions{% elif section == 'reports' %}Reports{% else %}Account{% endif %}</strong></div>
+<div class="top-right"><span class="secure-note"><span class="secure-dot"></span> PRIVATE WORKSPACE</span><span class="top-avatar">{{ user.username|first|upper }}</span></div>
+</header><main class="page-content" id="main-content">
+{% if messages %}<div class="messages" role="status">{% for message in messages %}<div class="message">{{ message }}</div>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}
+<footer class="footer">BudgetWise <span>·</span> Made with Django and Python</footer>
+</main></div><div class="mobile-scrim" id="mobile-scrim"></div></div>
+{% else %}
+{% block auth %}<div class="public-top"><a class="brand" href="{% url 'home' %}"><span class="brand-icon" aria-hidden="true">◈</span> <span class="brand-name">Budget<span class="brand-light">Wise</span></span></a><nav class="public-links"><a href="{% url 'about' %}">About</a><a href="{% url 'login' %}">Sign in</a><a href="{% url 'signup' %}">Create account</a></nav></div><main class="public-content">{% block public_content %}{% endblock %}</main>{% endblock %}
+{% endif %}
+</body></html>

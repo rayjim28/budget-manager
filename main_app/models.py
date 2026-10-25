@@ -12,7 +12,7 @@ class PersonalBudget(models.Model):
 
     @property
     def total_income(self):
-        return self.income_set.aggregate(Sum("amount"))["amount__sum"] or 0
+        return Income.objects.filter(budget=self, owner=self.owner).aggregate(Sum("amount"))["amount__sum"] or 0
 
     @property
     def total_income_count(self):
